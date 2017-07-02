@@ -60,7 +60,7 @@ json (`application/json`) or xml (`application/xml`). To change the response for
 corresponding value. 
 
 E.g. request `http://servername:8080/testpath` will give the following output depending on the `accept` header:  
-`text/html`
+`text/html`  
 ![Directory Listing](https://raw.githubusercontent.com/zlepper/gfs/master/images/directory-listing.png)
 
 `application/json`
