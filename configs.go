@@ -2,9 +2,9 @@ package gfs
 
 import (
 	"encoding/json"
+	"github.com/satori/go.uuid"
 	"log"
 	"os"
-	"github.com/satori/go.uuid"
 )
 
 // A config value
@@ -21,7 +21,6 @@ type Config struct {
 	Secret string `json:"secret"`
 	// Indicates if login is required to be allowed to read the contents
 	LoginRequiredForRead bool `json:"loginRequiredForRead"`
-
 }
 
 // Reads the specified config file
@@ -55,8 +54,8 @@ func GetConfigs(path string) (config *Config, err error) {
 				Username: "username",
 				Password: password,
 				Serve:    DefaultServePath,
-				Port:     ":8080",
-				Secret:uuid.NewV4().String(),
+				Port:     "8080",
+				Secret:   uuid.NewV4().String(),
 			}
 
 			SaveConfigs(path, config)

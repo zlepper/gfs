@@ -67,6 +67,7 @@ $RECYCLE.BIN/
 # Gradle:
 .idea/**/gradle.xml
 .idea/**/libraries
+.idea/vcs.xml
 
 # Mongo Explorer plugin:
 .idea/**/mongoSettings.xml
@@ -117,8 +118,7 @@ fabric.properties
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-vendor/
--vendor/vendor.json
+vendor/**/
 
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/

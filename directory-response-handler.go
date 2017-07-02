@@ -39,9 +39,9 @@ const (
 <table>
     <thead>
         <tr>
-            <th>Name</td>
-            <th>Size</td>
-            <th>Last modified</td>
+            <th>Name</th>
+            <th>Size</th>
+            <th>Last modified</th>
         </tr>
     </thead>
     <tbody>

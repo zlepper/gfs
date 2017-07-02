@@ -4,5 +4,5 @@ package main
 
 const (
 	DefaultConfigPath string = "/etc/gfs/gfs.json"
-	DefaultServePath  string = "/var/gfs"
+	DefaultServePath  string = "/var/gfs/storage/"
 )
