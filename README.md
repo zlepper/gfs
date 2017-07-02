@@ -144,7 +144,7 @@ E.g. request `http://servername:8080/testpath` will give the following output de
 ### Login
 To be able to use the upload functionality or see directories and files you have to be authenticated first. 
 Being authenticated means that you have a valid token, either as a cookie, with the name `token`, or in 
-the `token` header.
+the `gfs-token` header.
 
 To get this token send a POST request to the `/login` endpoint. Make sure to specify the `Content-Type` header, 
 as the endpoint accepts both `application/json`, `application/xml` and `application/x-www-form-urlencoded`. 

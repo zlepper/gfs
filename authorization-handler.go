@@ -113,7 +113,7 @@ func (h *AuthorizationHandler) Login(writer http.ResponseWriter, request *http.R
 
 // Checks if the request is authenticated. Returns nil if request is authenticated
 func (h *AuthorizationHandler) CheckAuthenticated(request *http.Request) error {
-	token := request.Header.Get("token")
+	token := request.Header.Get("gfs-token")
 	if token == "" {
 		cookie, err := request.Cookie("token")
 		if err != nil {
