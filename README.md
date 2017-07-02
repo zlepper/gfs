@@ -63,6 +63,8 @@ E.g. request `http://servername:8080/testpath` will give the following output de
 `text/html`  
 ![Directory Listing](https://raw.githubusercontent.com/zlepper/gfs/master/images/directory-listing.png)
 
+A couple of entries has been omitted to save on space in this document.
+
 `application/json`
 ```json
 {
@@ -96,8 +98,7 @@ E.g. request `http://servername:8080/testpath` will give the following output de
             "size": 2433,
             "is_directory": false,
             "last_modification_time": "2017-07-02T19:17:01.0521228+02:00"
-        },
-        ...
+        }
     ],
     "authorized": false
 }
@@ -136,7 +137,6 @@ E.g. request `http://servername:8080/testpath` will give the following output de
         <is_directory>false</is_directory>
         <last_modification_time>2017-07-02T19:17:01.0521228+02:00</last_modification_time>
     </entries>
-    ...
     <authorized>false</authorized>
 </DirectoryStats>
 ```
