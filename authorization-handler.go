@@ -1,13 +1,13 @@
 package gfs
 
 import (
-	"html/template"
-	"net/http"
-	"time"
 	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"html/template"
+	"net/http"
+	"time"
 )
 
 const (

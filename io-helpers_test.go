@@ -1,8 +1,8 @@
 package gfs
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestGetDirectoryStats(t *testing.T) {
@@ -14,7 +14,7 @@ func TestGetDirectoryStats(t *testing.T) {
 		if a.NotNil(stats.Entries) {
 			entries := stats.Entries
 			a.Equal("client-error-handler.go", entries[0].Name)
-			a.Equal("response-handler.go", entries[len(entries) - 1].Name)
+			a.Equal("response-handler.go", entries[len(entries)-1].Name)
 		}
 	}
 }

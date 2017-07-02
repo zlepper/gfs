@@ -2,8 +2,8 @@ package gfs
 
 import (
 	"github.com/stretchr/testify/assert"
-	"testing"
 	"os"
+	"testing"
 )
 
 func TestConfig(t *testing.T) {
@@ -36,10 +36,10 @@ func TestConfig(t *testing.T) {
 
 	t.Run("Save and read config file", func(t *testing.T) {
 		a := assert.New(t)
-		testConfig := &Config {
+		testConfig := &Config{
 			Password: "superPassword!.!",
-			Username:"test",
-			Serve:"./somewhere",
+			Username: "test",
+			Serve:    "./somewhere",
 		}
 
 		err := SaveConfigs(testPath, testConfig)

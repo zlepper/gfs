@@ -3,8 +3,8 @@ package gfs
 import (
 	"encoding/json"
 	"encoding/xml"
-	"log"
 	"html/template"
+	"log"
 	"net/http"
 )
 

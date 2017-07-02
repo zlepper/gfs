@@ -2,8 +2,8 @@ package gfs
 
 import (
 	"html/template"
-	"net/http"
 	"log"
+	"net/http"
 )
 
 const (

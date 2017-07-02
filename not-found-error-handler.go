@@ -1,9 +1,9 @@
 package gfs
 
 import (
-	"net/http"
 	"html/template"
 	"log"
+	"net/http"
 )
 
 const (
@@ -18,7 +18,6 @@ const (
 </body>
 </html>`
 )
-
 
 type notFound struct {
 	Path string `json:"path" xml:"path"`
@@ -36,7 +35,7 @@ func GetNotFoundHandler() (h *NotFoundHandler, err error) {
 		return nil, err
 	}
 	h = &NotFoundHandler{
-		htmlTemplate:t,
+		htmlTemplate: t,
 	}
 
 	return h, nil
