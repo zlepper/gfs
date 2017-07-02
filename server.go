@@ -172,9 +172,12 @@ func getUploadHandlerFunc(config *Config, defaultHandler http.HandlerFunc) (http
 
 			err = uploadHandler.Handle(writer, request)
 			if err != nil {
+				if err == ErrNoUploadingUp {
+					clientErrorHandler.Handle(writer, err, responseFormat, http.StatusBadRequest)
+					return
+				}
 				internalServerErrorHandler.Handle(writer, err, responseFormat)
 			}
-
 
 		} else {
 			defaultHandler(writer, request)

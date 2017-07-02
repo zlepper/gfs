@@ -1,11 +1,13 @@
 package gfs
 
 import (
+	"errors"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"path"
+	"strings"
 )
 
 type UploadHandler struct {
@@ -13,10 +15,19 @@ type UploadHandler struct {
 	config *Config
 }
 
+var (
+	ErrNoUploadingUp error = errors.New("Unable to upload up outside the <serve> directory.")
+)
+
 func (h *UploadHandler) Handle(writer http.ResponseWriter, request *http.Request) error {
 	uploadPath := request.FormValue("path")
 	outputPath := path.Join(h.config.Serve, uploadPath)
 	log.Println("outputPath", outputPath)
+
+	// Ensure that it's not possible to upload "upwards" in the tree
+	if !strings.HasPrefix(outputPath, h.config.Serve) {
+		return ErrNoUploadingUp
+	}
 
 	err := request.ParseMultipartForm(1 << 20) // 1MB
 	if err != nil {
