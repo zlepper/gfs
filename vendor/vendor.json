@@ -1,0 +1,37 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "X7lvJ+Xs/zF9gbffw2ax9gNY2rs=",
+			"path": "github.com/davecgh/go-spew/spew",
+			"revision": "782f4967f2dc4564575ca782fe2d04090b5faca8",
+			"revisionTime": "2017-06-26T23:16:45Z"
+		},
+		{
+			"checksumSHA1": "R3yk3OJzuq4MVfVGX5AhkkYv1ko=",
+			"path": "github.com/pmezard/go-difflib/difflib",
+			"revision": "792786c7400a136282c1664665ae0a8db921c6c2",
+			"revisionTime": "2016-01-10T10:55:54Z"
+		},
+		{
+			"checksumSHA1": "A4Px2X/a0JBJfecp+vMiXE8IWFQ=",
+			"path": "github.com/stretchr/testify/assert",
+			"revision": "f6abca593680b2315d2075e0f5e2a9751e3f431a",
+			"revisionTime": "2017-06-01T20:57:54Z"
+		},
+		{
+			"checksumSHA1": "UWjVYmoHlIfHzVIskELHiJQtMOI=",
+			"path": "golang.org/x/crypto/bcrypt",
+			"revision": "5ef0053f77724838734b6945dd364d3847e5de1d",
+			"revisionTime": "2017-06-29T04:06:47Z"
+		},
+		{
+			"checksumSHA1": "oVPHWesOmZ02vLq2fglGvf+AMgk=",
+			"path": "golang.org/x/crypto/blowfish",
+			"revision": "5ef0053f77724838734b6945dd364d3847e5de1d",
+			"revisionTime": "2017-06-29T04:06:47Z"
+		}
+	],
+	"rootPath": "github.com/zlepper/go-file-server"
+}
