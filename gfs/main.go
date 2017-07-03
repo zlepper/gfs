@@ -49,7 +49,10 @@ func main() {
 	}
 
 	if *persist {
-		gfs.SaveConfigs(*configPath, configs)
+		err := gfs.SaveConfigs(*configPath, configs)
+		if err != nil {
+			log.Panicln(err)
+		}
 		log.Println("Updated configs. Start gfs without the `persist` flag to start the program.")
 		return
 	}

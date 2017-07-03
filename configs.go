@@ -5,6 +5,7 @@ import (
 	"github.com/satori/go.uuid"
 	"log"
 	"os"
+	"path"
 )
 
 // A config value
@@ -69,8 +70,13 @@ func GetConfigs(path string) (config *Config, err error) {
 }
 
 // Saves the given config to disk
-func SaveConfigs(path string, config *Config) error {
-	file, err := os.Create(path)
+func SaveConfigs(p string, config *Config) error {
+	err := os.MkdirAll(path.Dir(p), os.ModePerm)
+	if err != nil {
+		return err
+	}
+
+	file, err := os.Create(p)
 	if err != nil {
 		return err
 	}
