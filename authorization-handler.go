@@ -14,7 +14,7 @@ const (
 	//language=html
 	LoginFailedHtml string = `
 	<p style="color: red">Login failed: {{.Error}}</p>
-	{{template "login"}}
+	{{template "login" .}}
 	`
 )
 
@@ -130,6 +130,13 @@ func (h *AuthorizationHandler) CheckAuthenticated(request *http.Request) error {
 func GetAuthorizationHandler(config *Config) (*AuthorizationHandler, error) {
 	loginFailedTemplate := template.New("loginFailed")
 	var err error
+
+	loginTemplate := loginFailedTemplate.New("login")
+	loginTemplate, err = loginTemplate.Parse(LoginHtml)
+	if err != nil {
+		return nil, err
+	}
+
 	loginFailedTemplate, err = loginFailedTemplate.Parse(LoginFailedHtml)
 	if err != nil {
 		return nil, err
