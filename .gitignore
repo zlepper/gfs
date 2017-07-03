@@ -126,3 +126,4 @@ vendor/**/
 # Notepad++ backups #
 *.bak
 
+/build/

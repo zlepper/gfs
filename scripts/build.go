@@ -52,17 +52,26 @@ var (
 
 func main() {
 	log.Println("Starting build")
+	goBinary, err := exec.LookPath("go")
+	if err != nil {
+		log.Panicln(err)
+	}
 	for _, conf := range configurations {
 		log.Printf("building binary for '%s'\n", conf.Extension)
 		cmd := exec.Cmd{
-			Path: os.ExpandEnv("${goroot}/bin/go"),
+			Path: goBinary,
 			Args: []string{
+				goBinary,
 				"build",
 				"-o",
 				fmt.Sprintf("build/gfs-%s", conf.Extension),
 				"github.com/zlepper/gfs/gfs",
 			},
-
+			Env: append(
+				os.Environ(),
+				fmt.Sprintf("GOOS=%s", conf.OS),
+				fmt.Sprintf("GOARCH=%s", conf.Arch),
+			),
 		}
 		output, err := cmd.CombinedOutput()
 		if err != nil {
