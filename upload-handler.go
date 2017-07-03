@@ -24,12 +24,17 @@ func (h *UploadHandler) Handle(writer http.ResponseWriter, request *http.Request
 	outputPath := path.Join(h.config.Serve, uploadPath)
 	log.Println("outputPath", outputPath)
 
+	err := os.MkdirAll(path.Dir(outputPath), os.ModePerm)
+	if err != nil {
+		return err
+	}
+
 	// Ensure that it's not possible to upload "upwards" in the tree
 	if !strings.HasPrefix(outputPath, h.config.Serve) {
 		return ErrNoUploadingUp
 	}
 
-	err := request.ParseMultipartForm(1 << 20) // 1MB
+	err = request.ParseMultipartForm(1 << 20) // 1MB
 	if err != nil {
 		return err
 	}
