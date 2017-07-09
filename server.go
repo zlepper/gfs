@@ -11,7 +11,7 @@ import (
 
 const (
 	// The running version of GFS
-	GFSVersion string = "0.0.2"
+	GFSVersion string = "0.0.3"
 )
 
 func RunServer(config *Config) {
@@ -172,9 +172,9 @@ func getUploadHandlerFunc(config *Config, defaultHandler http.HandlerFunc) (http
 				return
 			}
 
-			err = uploadHandler.Handle(writer, request)
+			err = uploadHandler.Handle(writer, request, responseFormat)
 			if err != nil {
-				if err == ErrNoUploadingUp {
+				if IsClientError(err) {
 					clientErrorHandler.Handle(writer, err, responseFormat, http.StatusBadRequest)
 					return
 				}
@@ -187,4 +187,9 @@ func getUploadHandlerFunc(config *Config, defaultHandler http.HandlerFunc) (http
 	}
 
 	return f, nil
+}
+
+// Returns true if the given error was an error on the clients side
+func IsClientError(err error) bool {
+	return isUploadClientError(err)
 }

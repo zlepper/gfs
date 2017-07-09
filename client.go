@@ -6,18 +6,31 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 )
 
 type Client struct {
-	url    string
+	url    *url.URL
 	token  string
-	client *http.Client
+	client http.Client
 }
 
-func (c *Client) getUrl(p string) string {
-	return path.Join(c.url, p)
+func (c *Client) getUrl(p string) (string, error) {
+	target, err := url.Parse(p)
+	if err != nil {
+		return "", err
+	}
+
+	u := c.url.ResolveReference(target)
+
+	return u.String(), nil
+}
+
+func (c *Client) setHeaders(req *http.Request) {
+	req.Header.Set("gfs-token", c.token)
+	req.Header.Set("accept", FormatJson)
 }
 
 func (c *Client) Login(username, password string) error {
@@ -32,11 +45,17 @@ func (c *Client) Login(username, password string) error {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", c.getUrl("/login"), &buf)
-	req.Header.Set("accept", FormatJson)
+	sUrl, err := c.getUrl("/login")
 	if err != nil {
 		return err
 	}
+
+	req, err := http.NewRequest("POST", sUrl, &buf)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("accept", FormatJson)
+	req.Header.Set("Content-Type", FormatJson)
 
 	resp, err := c.client.Do(req)
 	if err != nil {
@@ -64,13 +83,16 @@ func (c *Client) Login(username, password string) error {
 }
 
 func (c *Client) getContent(p string, out interface{}) error {
-	req, err := http.NewRequest("GET", c.getUrl(p), nil)
+	sUrl, err := c.getUrl(p)
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequest("GET", sUrl, nil)
 	if err != nil {
 		return err
 	}
 
-	req.Header.Set("gfs-token", c.token)
-	req.Header.Set("accept", FormatJson)
+	c.setHeaders(req)
 
 	resp, err := c.client.Do(req)
 	if err != nil {
@@ -136,28 +158,55 @@ func NewUploadFileFromDisk(filepath string) (f UploadFile, err error) {
 	return NewUploadFile(path.Base(filepath), file, stats.Size()), nil
 }
 
-func (c *Client) UploadFiles(files []UploadFile, targetPath string) error {
-	//
-	//rp, wp, err := os.Pipe()
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//bodyWriter := multipart.NewWriter(wp)
-	//
-	//
-	//
-	//bodyWriter.CreateFormFile()
-
-	return errors.New("gfs.UploadFiles is not yet supported.")
-}
-
-func NewClient(url, username, password string) (*Client, error) {
-	client := Client{
-		url: url,
+// Call this to upload files
+// Pass a function to progressUpdater to receive updates about the progress of the upload
+func (c *Client) UploadFiles(files []UploadFile) error {
+	for _, file := range files {
+		err := c.UploadFile(file)
+		if err != nil {
+			return err
+		}
 	}
 
-	err := client.Login(username, password)
+	return nil
+}
+
+func (c *Client) UploadFile(file UploadFile) error {
+	defer file.Reader.Close()
+
+	sUrl, err := c.getUrl("/upload")
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequest("POST", sUrl, file.Reader)
+	if err != nil {
+		return err
+	}
+
+	c.setHeaders(req)
+	req.Header.Set("Content-Type", FormatOctetStream)
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return err
+	}
+	resp.Body.Close()
+
+	return nil
+}
+
+func NewClient(host, username, password string) (*Client, error) {
+
+	u, err := url.Parse(host)
+	if err != nil {
+		return nil, err
+	}
+
+	client := Client{
+		url: u,
+	}
+
+	err = client.Login(username, password)
 	if err != nil {
 		return nil, err
 	}

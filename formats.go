@@ -6,4 +6,5 @@ const (
 	FormatJson            string = "application/json"
 	FormatXml             string = "application/xml"
 	FormatXFormUrlEncoded string = "application/x-www-form-urlencoded"
+	FormatOctetStream     string = "application/octet-stream"
 )

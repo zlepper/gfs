@@ -35,5 +35,7 @@ func getResponseFormat(request *http.Request) string {
 }
 
 func getContentType(request *http.Request) string {
-	return request.Header.Get("Content-Type")
+	ct := request.Header.Get("Content-Type")
+	cts := strings.Split(ct, ";")
+	return cts[0]
 }

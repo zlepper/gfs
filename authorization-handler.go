@@ -70,7 +70,9 @@ func (h *AuthorizationHandler) Login(writer http.ResponseWriter, request *http.R
 		username = loginRequest.Username
 		password = loginRequest.Password
 	default:
-		return errors.New(fmt.Sprintf("Unknown request format '%s'. Accepted types are: '%s', '%s' and '%s'", contentType, FormatXFormUrlEncoded, FormatJson, FormatXml))
+		err := errors.New(fmt.Sprintf("Unknown request format '%s'. Accepted types are: '%s', '%s' and '%s'", contentType, FormatXFormUrlEncoded, FormatJson, FormatXml))
+		fail := AuthoizationFailedResponse{Path: redirectPath, Error: err.Error()}
+		return h.responseHandler.WriteResponse(writer, http.StatusBadRequest, h.loginFailedTemplate, format, fail)
 	}
 
 	if h.config.Username == username {

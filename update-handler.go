@@ -9,11 +9,21 @@ import (
 var hasUpdate string = ""
 
 func checkForUpdates() {
-	release, err := ghc.GetLatestReleaseForPlatform("zlepper", "gfs", internal.FilenameRegex, false)
+	release, err := ghc.GetLatestReleaseForPlatform("zlepper", "gfs", internal.FilenameRegex, true)
 	if err == nil {
-		if newer, err := ghc.IsNewer(release, GFSVersion); err != nil && newer {
+		newer, err := ghc.IsNewer(release, GFSVersion)
+
+		if err != nil {
+			log.Println("Error when comparing update versions", err.Error())
+		}
+
+		if newer {
 			log.Printf("\n\nA newer GFS release is available on github. Download at:\n%s\n\n", release.DownloadUrl)
 			hasUpdate = release.DownloadUrl
+		} else {
+			log.Println("No new version available")
 		}
+	} else {
+		log.Println("Error when checking for updates:", err.Error())
 	}
 }
