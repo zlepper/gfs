@@ -190,11 +190,15 @@ Request:
 To upload files login should be done first. Once a token has been acquired a `multipart/form-data` POST request 
 can be send to the `/upload` endpoint.  
 The request should have two arguments:  
-uploadfiles: The files that should be uploaded. (How this specifically is done is often language specific.)  
-path: The path to upload to the files to e.g. `/test-path`.  
+`uploadfiles`: The files that should be uploaded. (How this specifically is done is often language specific.)  
+`path`: The path to upload to the files to e.g. `/test-path`.  
 
 The files are then uploaded to `<servepath>/test-path`, where `<servepath>` is the serve path that was 
 set in the configs. 
+
+It's also possible to POST a `application/octet-stream` request to `/upload`, where the query parameter `filename` 
+is set to the name of the file that's being uploaded, path inclusive. This endpoint is mostly available for easy
+programmable integration. 
 
 
 [releases]: https://github.com/zlepper/gfs/releases

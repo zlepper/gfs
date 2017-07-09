@@ -74,8 +74,14 @@ func (h *UploadHandler) Handle(writer http.ResponseWriter, request *http.Request
 
 		defer request.Body.Close()
 
-		return h.uploadFile(filename, request.Body)
+		err := h.uploadFile(filename, request.Body)
+		if err != nil {
+			return err
+		}
 
+		writer.WriteHeader(http.StatusAccepted)
+
+		return nil
 	} else {
 		return ErrUnknownContentType
 	}

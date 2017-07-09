@@ -128,16 +128,13 @@ type UploadFile struct {
 	Filename string
 	// The file reader that allows reading the file
 	Reader io.ReadCloser
-	// The length of the file
-	FileLength int64
 }
 
 // Creates a new instance of upload file.
-func NewUploadFile(filename string, reader io.ReadCloser, fileLength int64) UploadFile {
+func NewUploadFile(filename string, reader io.ReadCloser) UploadFile {
 	return UploadFile{
-		Filename:   filename,
-		Reader:     reader,
-		FileLength: fileLength,
+		Filename: filename,
+		Reader:   reader,
 	}
 }
 
@@ -145,17 +142,12 @@ func NewUploadFile(filename string, reader io.ReadCloser, fileLength int64) Uplo
 // Make sure to call `f.Reader.Close()` to make sure no leaks happens in
 // case of errors
 func NewUploadFileFromDisk(filepath string) (f UploadFile, err error) {
-	stats, err := os.Stat(filepath)
-	if err != nil {
-		return f, err
-	}
-
 	file, err := os.Open(filepath)
 	if err != nil {
 		return f, err
 	}
 
-	return NewUploadFile(path.Base(filepath), file, stats.Size()), nil
+	return NewUploadFile(path.Base(filepath), file), nil
 }
 
 // Call this to upload files
@@ -186,11 +178,27 @@ func (c *Client) UploadFile(file UploadFile) error {
 	c.setHeaders(req)
 	req.Header.Set("Content-Type", FormatOctetStream)
 
+	q := req.URL.Query()
+	q.Add("filename", file.Filename)
+	req.URL.RawQuery = q.Encode()
+
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return err
 	}
-	resp.Body.Close()
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusAccepted {
+		var response invalidRequest
+		err = json.NewDecoder(resp.Body).Decode(&response)
+		if err != nil {
+			return err
+		}
+
+		if response.Error != "" {
+			return errors.New(response.Error)
+		}
+	}
 
 	return nil
 }

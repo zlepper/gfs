@@ -24,6 +24,8 @@ func TestClient_UploadFiles(t *testing.T) {
 		f, err := NewUploadFileFromDisk("client.go")
 
 		if a.NoError(err) {
+			a.Equal("client.go", f.Filename)
+
 			err = c.UploadFile(f)
 
 			a.NoError(err)
