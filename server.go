@@ -15,6 +15,8 @@ const (
 )
 
 func RunServer(config *Config) {
+	go checkForUpdates() // Check for updates on startup
+
 	handlerFunc, err := getHandler(config)
 	if err != nil {
 		log.Fatalln(err)

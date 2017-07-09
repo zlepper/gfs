@@ -69,6 +69,9 @@ const (
 <hr />
 {{if .Authorized}}
 	{{template "upload" .}}
+	{{if .HasUpdate}}
+		<p>A new update is available for download at <a href="{{.UpdateUrl}}">{{.UpdateUrl}}</a>"</p>
+	{{end}}
 {{else}}
 	{{template "login" .}}
 {{end}}
@@ -101,6 +104,10 @@ type DirectoryStats struct {
 	Entries []DirectoryEntry `json:"entries" xml:"entries"`
 	// Indicates if the request is authorized
 	Authorized bool `json:"authorized" xml:"authorized"`
+	// Indicates if a new update is available for GFS
+	HasUpdate bool `json:"has_update" xml:"has_update"`
+	// Indicates the url the update can be downloaded at, if HasUpdate is true
+	UpdateUrl string `json:"update_url" xml:"update_url"`
 }
 
 type DirectoryResponseHandler struct {
@@ -139,6 +146,11 @@ func GetDirectoryResponseHandler() (h *DirectoryResponseHandler, err error) {
 
 // Write a not found message to the response.
 func (h *DirectoryResponseHandler) Handle(writer http.ResponseWriter, stats *DirectoryStats, format string) {
+	if hasUpdate != "" {
+		stats.HasUpdate = true
+		stats.UpdateUrl = hasUpdate
+	}
+
 	err := h.responseHandler.WriteResponse(writer, http.StatusOK, h.htmlTemplate, format, stats)
 	if err != nil {
 		log.Println("Something went wrong when responding", err.Error())
