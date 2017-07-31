@@ -211,12 +211,10 @@ func (c *Client) UploadFile(file UploadFile) error {
 		var response invalidRequest
 		err = json.NewDecoder(resp.Body).Decode(&response)
 		if err != nil {
-			println("This is what broke 1")
 			return err
 		}
 
 		if response.Error != "" {
-			println("It broke down here!")
 			return errors.New(response.Error)
 		}
 	}
