@@ -17,6 +17,22 @@ type Client struct {
 	client http.Client
 }
 
+func urlJoin(p1, p2 string) (string, error) {
+	u1, err := url.Parse(p1)
+	if err != nil {
+		return "", err
+	}
+
+	u2, err := url.Parse(p2)
+	if err != nil {
+		return "", err
+	}
+
+	u := u1.ResolveReference(u2)
+
+	return u.String(), nil
+}
+
 func (c *Client) getUrl(p string) (string, error) {
 	target, err := url.Parse(p)
 	if err != nil {
@@ -128,26 +144,29 @@ type UploadFile struct {
 	Filename string
 	// The file reader that allows reading the file
 	Reader io.ReadCloser
+	// The path on which the file is uploaded on the GFS server
+	UploadPath string
 }
 
 // Creates a new instance of upload file.
-func NewUploadFile(filename string, reader io.ReadCloser) UploadFile {
+func NewUploadFile(filename, uploadPath string, reader io.ReadCloser) UploadFile {
 	return UploadFile{
 		Filename: filename,
 		Reader:   reader,
+		UploadPath: uploadPath,
 	}
 }
 
 // Helper method to quickly create new UploadFile from a file on the disk
 // Make sure to call `f.Reader.Close()` to make sure no leaks happens in
 // case of errors
-func NewUploadFileFromDisk(filepath string) (f UploadFile, err error) {
+func NewUploadFileFromDisk(filepath, uploadPath string) (f UploadFile, err error) {
 	file, err := os.Open(filepath)
 	if err != nil {
 		return f, err
 	}
 
-	return NewUploadFile(path.Base(filepath), file), nil
+	return NewUploadFile(path.Base(filepath), uploadPath, file), nil
 }
 
 // Call this to upload files
@@ -179,7 +198,13 @@ func (c *Client) UploadFile(file UploadFile) error {
 	req.Header.Set("Content-Type", FormatOctetStream)
 
 	q := req.URL.Query()
-	q.Add("filename", file.Filename)
+
+	uploadPath, err := urlJoin(file.UploadPath, file.Filename)
+	if err != nil {
+		return err
+	}
+
+	q.Add("filename", uploadPath)
 	req.URL.RawQuery = q.Encode()
 
 	resp, err := c.client.Do(req)
