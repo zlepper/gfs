@@ -23,7 +23,7 @@ const (
 )
 
 type internalServerError struct {
-	Error error `json:"error" xml:"error"`
+	Error string `json:"error" xml:"error"`
 }
 
 type InternalServerErrorHandler struct {
@@ -46,7 +46,7 @@ func GetInternalServerErrorHandler() (h *InternalServerErrorHandler, err error) 
 
 // Write a not found message to the response.
 func (h *InternalServerErrorHandler) Handle(writer http.ResponseWriter, err error, format string) {
-	response := internalServerError{err}
+	response := internalServerError{err.Error()}
 
 	err = h.responseHandler.WriteResponse(writer, http.StatusInternalServerError, h.htmlTemplate, format, response)
 	if err != nil {

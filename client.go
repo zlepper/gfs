@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"io/ioutil"
 )
 
 type Client struct {
@@ -214,15 +215,24 @@ func (c *Client) UploadFile(file UploadFile) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusAccepted {
-		var response invalidRequest
-		err = json.NewDecoder(resp.Body).Decode(&response)
+		by, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return err
 		}
 
-		if response.Error != "" {
-			return errors.New(response.Error)
-		}
+		println(string(by))
+		return errors.New(string(by))
+		//var response invalidRequest
+		//err = json.NewDecoder(resp.Body).Decode(&response)
+		//if err != nil {
+		//	println("This is what broke 1")
+		//	return err
+		//}
+		//
+		//if response.Error != "" {
+		//	println("It broke down here!")
+		//	return errors.New(response.Error)
+		//}
 	}
 
 	return nil

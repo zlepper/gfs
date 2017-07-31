@@ -8,7 +8,7 @@ import (
 func TestClient_Login(t *testing.T) {
 	a := assert.New(t)
 
-	c, err := NewClient("http://localhost:8080", "admin", "password")
+	c, err := NewClient("http://localhost:28080", "admin", "password")
 	if a.NoError(err) {
 		a.NotNil(c)
 	}
@@ -17,11 +17,11 @@ func TestClient_Login(t *testing.T) {
 func TestClient_UploadFiles(t *testing.T) {
 	a := assert.New(t)
 
-	c, err := NewClient("http://localhost:8080", "admin", "password")
+	c, err := NewClient("http://localhost:28080", "admin", "password")
 	if a.NoError(err) {
 		a.NotNil(c)
 
-		f, err := NewUploadFileFromDisk("client.go")
+		f, err := NewUploadFileFromDisk("client.go", "test-path")
 
 		if a.NoError(err) {
 			a.Equal("client.go", f.Filename)

@@ -17,9 +17,9 @@ type UploadHandler struct {
 }
 
 var (
-	ErrNoUploadingUp      error = errors.New("Unable to upload up outside the <serve> directory.")
-	ErrNoFilenameProvided       = errors.New("No filename provided. Cannot accept upload")
-	ErrUnknownContentType       = errors.New("Unknown upload content type. Cannot proceed.")
+	ErrNoUploadingUp      = errors.New("Unable to upload up outside the <serve> directory.")
+	ErrNoFilenameProvided = errors.New("No filename provided. Cannot accept upload")
+	ErrUnknownContentType = errors.New("Unknown upload content type. Cannot proceed.")
 )
 
 func isUploadClientError(err error) bool {

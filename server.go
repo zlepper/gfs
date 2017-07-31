@@ -11,7 +11,7 @@ import (
 
 const (
 	// The running version of GFS
-	GFSVersion string = "0.0.3"
+	GFSVersion string = "0.0.4"
 )
 
 func RunServer(config *Config) {
