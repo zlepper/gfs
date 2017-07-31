@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -209,24 +208,17 @@ func (c *Client) UploadFile(file UploadFile) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusAccepted {
-		by, err := ioutil.ReadAll(resp.Body)
+		var response invalidRequest
+		err = json.NewDecoder(resp.Body).Decode(&response)
 		if err != nil {
+			println("This is what broke 1")
 			return err
 		}
 
-		println(string(by))
-		return errors.New(string(by))
-		//var response invalidRequest
-		//err = json.NewDecoder(resp.Body).Decode(&response)
-		//if err != nil {
-		//	println("This is what broke 1")
-		//	return err
-		//}
-		//
-		//if response.Error != "" {
-		//	println("It broke down here!")
-		//	return errors.New(response.Error)
-		//}
+		if response.Error != "" {
+			println("It broke down here!")
+			return errors.New(response.Error)
+		}
 	}
 
 	return nil
