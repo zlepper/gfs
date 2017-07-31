@@ -5,11 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
 	"path"
-	"io/ioutil"
+	"strings"
 )
 
 type Client struct {
@@ -18,20 +19,16 @@ type Client struct {
 	client http.Client
 }
 
-func urlJoin(p1, p2 string) (string, error) {
-	u1, err := url.Parse(p1)
-	if err != nil {
-		return "", err
+func urlJoin(p1, p2 string) string {
+	if !strings.HasSuffix(p1, "/") {
+		p1 = p1 + "/"
 	}
 
-	u2, err := url.Parse(p2)
-	if err != nil {
-		return "", err
+	if strings.HasPrefix(p2, "/") {
+		p2 = p2[1:]
 	}
 
-	u := u1.ResolveReference(u2)
-
-	return u.String(), nil
+	return p1 + p2
 }
 
 func (c *Client) getUrl(p string) (string, error) {
@@ -152,8 +149,8 @@ type UploadFile struct {
 // Creates a new instance of upload file.
 func NewUploadFile(filename, uploadPath string, reader io.ReadCloser) UploadFile {
 	return UploadFile{
-		Filename: filename,
-		Reader:   reader,
+		Filename:   filename,
+		Reader:     reader,
 		UploadPath: uploadPath,
 	}
 }
@@ -200,10 +197,7 @@ func (c *Client) UploadFile(file UploadFile) error {
 
 	q := req.URL.Query()
 
-	uploadPath, err := urlJoin(file.UploadPath, file.Filename)
-	if err != nil {
-		return err
-	}
+	uploadPath := urlJoin(file.UploadPath, file.Filename)
 
 	q.Add("filename", uploadPath)
 	req.URL.RawQuery = q.Encode()
